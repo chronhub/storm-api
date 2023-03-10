@@ -51,7 +51,7 @@ final readonly class StopProjection
                 ->withStatusCode(400);
         }
 
-        $projectionName = $request->get('projection_name');
+        $projectionName = $request->get('name');
 
         $this->projectorManager->stop($projectionName);
 
