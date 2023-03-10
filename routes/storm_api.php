@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('stream')->group(function (): void {
+Route::prefix('api/storm/stream')->group(function (): void {
     Route::post('/', \Chronhub\Storm\Http\Api\PostStream::class);
     Route::delete('/', \Chronhub\Storm\Http\Api\DeleteStream::class);
     Route::get('/', \Chronhub\Storm\Http\Api\RetrieveAll::class);
@@ -16,7 +16,7 @@ Route::prefix('stream')->group(function (): void {
     Route::get('exists', \Chronhub\Storm\Http\Api\RequestStreamExists::class);
 });
 
-Route::prefix('projection')->group(function (): void {
+Route::prefix('api/storm/projection')->group(function (): void {
     Route::get('/reset', \Chronhub\Storm\Http\Api\ResetProjection::class);
     Route::get('/stop', \Chronhub\Storm\Http\Api\StopProjection::class);
     Route::get('/state', \Chronhub\Storm\Http\Api\RequestProjectionState::class);
