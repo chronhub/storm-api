@@ -1,0 +1,449 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Api storm",
+        "version": "0.1"
+    },
+    "servers": [
+        {
+            "url": "http://storm-api.dvl.to:80",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/api/storm/projection": {
+            "delete": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Delete projection by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "include_events",
+                        "in": "query",
+                        "description": "with emitted events",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Projection deleted"
+                    }
+                }
+            }
+        },
+        "/api/storm/stream": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Get all stream events by stream name and aggregate id",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Aggregate id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Post stream",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Delete stream by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/categories": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Get category names delimited by comma",
+                "parameters": [
+                    {
+                        "name": "categories",
+                        "in": "query",
+                        "description": "Filter category names ordered by ascendant name",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/state": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Get projection state by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/status": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Get projection status by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/position": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Get stream position by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/exists": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Check if stream exists by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/names": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Get stream names",
+                "parameters": [
+                    {
+                        "name": "names",
+                        "in": "query",
+                        "description": "Filter stream names ordered by ascendant name",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/reset": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Reset projection by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/paginated": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Get paginated stream events by stream name and aggregate id",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Limit the number of stream events",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "Sort directioon by ascendant or descendant",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "offest",
+                        "in": "query",
+                        "description": "Query offset",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/from": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Get stream position by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "position",
+                        "in": "query",
+                        "description": "Stream position",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/from_to": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Get stream events by stream name from one position to another position",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "From stream position",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "To stream position",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/stop": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Stop projection by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "chronhub/storm-api",
+  "description": "storm is a http api for larastorm",
+  "keywords": [
+    "http", "api"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "steph bug",
+      "email": "chronhubgit@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "chronhub/larastorm": "dev-main",
+    "zircote/swagger-php": "^4.7"
+  },
+  "require-dev": {
+    "rector/rector": "dev-main",
+    "laravel/pint": "^1.6",
+    "phpstan/phpstan":"^1.10",
+    "nunomaduro/larastan": "^2.5",
+    "orchestra/testbench": "^8.0",
+    "phpunit/phpunit": "^10.0",
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "psr-4": {
+      "Chronhub\\Storm\\Http\\Api\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Chronhub\\Storm\\Http\\Api\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "pint": "vendor/bin/pint",
+    "rector-init": "vendor/bin/rector init",
+    "rector-dry": "vendor/bin/rector process --dry-run",
+    "rector-process": "vendor/bin/rector process",
+    "openapi": "vendor/bin/openapi ./src --bootstrap vendor/autoload.php --output ./resource/openapi.json --format json"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev"
+}
