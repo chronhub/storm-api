@@ -39,7 +39,7 @@ final readonly class ArrayEventLoader implements StreamEventLoaderConnection
                     $streamEvent = (array) $streamEvent;
                 }
 
-                yield $this->eventSerializer->normalizeContent($this->$streamEvent);
+                yield $this->eventSerializer->normalizeContent($streamEvent);
 
                 $count++;
             }
