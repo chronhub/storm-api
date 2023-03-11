@@ -25,24 +25,5 @@ class StormApiServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(MessageFactory::class, StreamEventFactory::class);
-
-        // assume pdo
-        $this->app->when(RetrieveAllPaginated::class)
-            ->needs(QueryFilter::class)
-            ->give(function (): object {
-                return new AllPaginatedStream();
-            });
-
-        $this->app->when(RetrieveFromIncludedStreamPosition::class)
-            ->needs(QueryFilter::class)
-            ->give(function (): object {
-                return new FromIncludedStreamPosition();
-            });
-
-        $this->app->when(RetrieveFromToStreamPosition::class)
-            ->needs(QueryFilter::class)
-            ->give(function (): object {
-                return new FromToStreamPosition();
-            });
     }
 }

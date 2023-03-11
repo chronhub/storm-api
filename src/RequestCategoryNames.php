@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api;
 
+use Chronhub\Storm\Stream\StreamName;
 use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
 use OpenApi\Attributes\Items;
@@ -71,8 +72,12 @@ final readonly class RequestCategoryNames
 
     private function extractCategoryNames(Request $request): array
     {
-        $categoryNames = explode(',', $request->get('name', []));
+        $names = $request->get('name');
 
-        return array_filter($categoryNames);
+        if (! str_contains($names, ',')) {
+            return [trim($names)];
+        }
+
+        return array_filter(explode(',', $names));
     }
 }

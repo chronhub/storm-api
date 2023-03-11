@@ -11,8 +11,13 @@ use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\JsonContent;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
+use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
+use Chronhub\Storm\Http\Api\Response\ResponseFactory;
+use Chronhub\Storm\Http\Api\QueryFilter\AllPaginatedStream;
+use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 
 #[
     Get(
@@ -61,6 +66,14 @@ use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 ]
 final readonly class RetrieveAllPaginated extends RetrieveWithQueryFilter
 {
+    public function __construct(protected Chronicler $chronicler,
+                                protected StreamEventSerializer $eventSerializer,
+                                protected Factory $validation,
+                                protected ResponseFactory $response,
+                                protected AllPaginatedStream $query)
+    {
+    }
+
     protected function makeValidator(Request $request): Validator
     {
         return $this->validation->make($request->all(), [
@@ -77,6 +90,6 @@ final readonly class RetrieveAllPaginated extends RetrieveWithQueryFilter
         $offset = (int) $request->get('offset') ?? 0;
         $direction = $request->get('direction');
 
-        return ($this->queryFilter)($limit, $offset, $direction);
+        return $this->query->filter($limit, $offset, $direction);
     }
 }

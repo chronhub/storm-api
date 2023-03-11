@@ -15,9 +15,11 @@ use Chronhub\Storm\Stream\StreamName;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
+use function trim;
 use function explode;
 use function array_map;
 use function array_filter;
+use function str_contains;
 
 #[
     Get(
@@ -79,7 +81,7 @@ final readonly class RequestStreamNames
     {
         $names = $request->get('name');
 
-        if(!str_contains($names, ',')) {
+        if (! str_contains($names, ',')) {
             return [new StreamName(trim($names))];
         }
 

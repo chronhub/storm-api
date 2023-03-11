@@ -11,8 +11,13 @@ use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
 use OpenApi\Attributes\JsonContent;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
+use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
+use Chronhub\Storm\Http\Api\Response\ResponseFactory;
+use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
+use Chronhub\Storm\Http\Api\QueryFilter\FromIncludedStreamPosition;
 
 #[
     Get(
@@ -47,6 +52,14 @@ use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 ]
 final readonly class RetrieveFromIncludedStreamPosition extends RetrieveWithQueryFilter
 {
+    public function __construct(protected Chronicler $chronicler,
+                                protected StreamEventSerializer $eventSerializer,
+                                protected Factory $validation,
+                                protected ResponseFactory $response,
+                                protected FromIncludedStreamPosition $query)
+    {
+    }
+
     protected function makeValidator(Request $request): Validator
     {
         return $this->validation->make($request->all(), [

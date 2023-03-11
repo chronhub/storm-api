@@ -9,7 +9,7 @@ use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 
 final readonly class FromIncludedStreamPosition
 {
-    public function __invoke(int $position): QueryFilter
+    public function filter(int $position): QueryFilter
     {
         return new class($position) implements QueryFilter
         {

@@ -7,24 +7,13 @@ namespace Chronhub\Storm\Http\Api;
 use Generator;
 use Illuminate\Http\Request;
 use Chronhub\Storm\Stream\StreamName;
-use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
-use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
-use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 use function is_array;
 
 abstract readonly class RetrieveWithQueryFilter
 {
-    public function __construct(protected Chronicler $chronicler,
-                                protected StreamEventSerializer $eventSerializer,
-                                protected Factory $validation,
-                                protected ResponseFactory $response,
-                                protected QueryFilter $queryFilter)
-    {
-    }
-
     public function __invoke(Request $request): ResponseFactory
     {
         $validator = $this->makeValidator($request);

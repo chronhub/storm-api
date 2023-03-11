@@ -9,9 +9,9 @@ use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 
 final readonly class AllPaginatedStream
 {
-    private function queryFilter(int $limit,
-                                 int $offset,
-                                 string $direction): QueryFilter
+    public function filter(int $limit,
+                           int $offset,
+                           string $direction): QueryFilter
     {
         return new class($limit, $offset, $direction) implements QueryFilter
         {
