@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api\Support;
 
+use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 use stdClass;
 use Generator;
 use Chronhub\Storm\Stream\StreamName;
@@ -15,6 +16,10 @@ use Chronhub\Larastorm\Support\Contracts\StreamEventLoaderConnection;
 
 final readonly class ArrayEventLoader implements StreamEventLoaderConnection
 {
+    public function __construct(private readonly StreamEventSerializer $eventSerializer)
+    {
+    }
+
     public function query(Builder $builder, StreamName $streamName): Generator
     {
         $streamEvents = $this->generateStreamEvents($builder->cursor(), $streamName);
@@ -29,17 +34,12 @@ final readonly class ArrayEventLoader implements StreamEventLoaderConnection
         try {
             $count = 0;
 
-            // fixMe
-            // events are generated as is
-            // not normalized to array with header and content
-            // stream persistence normalize but, we do to have a denormalized event
-
             foreach ($streamEvents as $streamEvent) {
                 if ($streamEvent instanceof stdClass) {
                     $streamEvent = (array) $streamEvent;
                 }
 
-                yield $streamEvent;
+                yield $this->eventSerializer->normalizeContent($this->$streamEvent);
 
                 $count++;
             }
