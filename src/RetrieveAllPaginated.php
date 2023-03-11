@@ -51,7 +51,7 @@ use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
                 description: 'query offset',
                 in: 'query',
                 required: true,
-                schema: new Schema(type: 'integer', minimum: 1)
+                schema: new Schema(type: 'integer')
             ),
         ],
         responses: [
@@ -80,7 +80,7 @@ final readonly class RetrieveAllPaginated extends RetrieveWithQueryFilter
             'name' => 'required|string',
             'limit' => 'required|integer|min:1',
             'direction' => 'required|string|in:asc,desc',
-            'offset' => 'integer|min:0|not_in:0',
+            'offset' => 'integer|min:0',
         ]);
     }
 

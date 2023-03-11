@@ -13,7 +13,6 @@ use OpenApi\Attributes\Components;
 use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Support\Responsable;
-use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 #[Components(
     schemas: [
@@ -116,24 +115,6 @@ class ResponseFactory implements Responsable
             $payload['errors'] = $this->errors->toArray();
         }
 
-        if ($this->isError()) {
-            $payload['meta'] = $this->metadata();
-        }
-
         return new JsonResponse($payload, $this->status, $this->headers);
-    }
-
-    private function isError(): bool
-    {
-        return $this->status >= 400 && $this->status < 600;
-    }
-
-    private function metadata(): array
-    {
-        return [
-            'http_status' => $this->status.', '.SymfonyResponse::$statusTexts[$this->status],
-            'log_reference' => 'todo',
-            'links' => ['todo'],
-        ];
     }
 }

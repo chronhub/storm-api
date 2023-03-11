@@ -13,6 +13,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 use Chronhub\Storm\Chronicler\Exceptions\StreamNotFound;
 use Chronhub\Storm\Projector\Exceptions\ProjectionNotFound;
+use Chronhub\Storm\Chronicler\Exceptions\StreamAlreadyExists;
 
 final readonly class ApiExceptionHandler
 {
@@ -40,6 +41,7 @@ final readonly class ApiExceptionHandler
             AuthenticationException::class => 401,
             AuthorizationException::class => 403,
             ProjectionNotFound::class, StreamNotFound::class => 404,
+            StreamAlreadyExists::class => 419,
             default => 500
         };
     }

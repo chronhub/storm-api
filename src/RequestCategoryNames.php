@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api;
 
-use Chronhub\Storm\Stream\StreamName;
 use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
 use OpenApi\Attributes\Items;
@@ -15,8 +14,10 @@ use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
+use function trim;
 use function explode;
 use function array_filter;
+use function str_contains;
 
 #[
     Get(
