@@ -12,9 +12,9 @@ Route::prefix('api/storm/stream')->group(function (): void {
     Route::get('/paginated', \Chronhub\Storm\Http\Api\RetrieveAllPaginated::class);
     Route::get('/from', \Chronhub\Storm\Http\Api\RetrieveFromToStreamPosition::class);
     Route::get('/from_to', \Chronhub\Storm\Http\Api\RetrieveFromToStreamPosition::class);
-    Route::get('names', \Chronhub\Storm\Http\Api\RequestStreamNames::class);
-    Route::get('categories', \Chronhub\Storm\Http\Api\RequestCategoryNames::class);
-    Route::get('exists', \Chronhub\Storm\Http\Api\RequestStreamExists::class);
+    Route::get('/names', \Chronhub\Storm\Http\Api\RequestStreamNames::class);
+    Route::get('/categories', \Chronhub\Storm\Http\Api\RequestCategoryNames::class);
+    Route::get('/exists', \Chronhub\Storm\Http\Api\RequestStreamExists::class);
 });
 
 Route::prefix('api/storm/projection')->group(function (): void {

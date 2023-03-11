@@ -20,12 +20,12 @@ use function array_filter;
 #[
     Get(
         path: '/api/storm/stream/categories',
-        description: 'Get category names separated by comma',
+        description: 'Get category name(s)',
         tags: ['Stream'],
         parameters: [
             new Parameter(
                 name: 'name',
-                description: 'Stream name',
+                description: 'Get or or many category name(s) separated by comma',
                 in: 'query',
                 required: true,
                 schema: new Schema(type: 'array', items: new Items(type: 'string'))
@@ -52,7 +52,7 @@ final readonly class RequestCategoryNames
     public function __invoke(Request $request): ResponseFactory
     {
         $validator = $this->validation->make($request->all(), [
-            'categories' => 'required|string',
+            'name' => 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -71,7 +71,7 @@ final readonly class RequestCategoryNames
 
     private function extractCategoryNames(Request $request): array
     {
-        $categoryNames = explode(',', $request->get('categories', []));
+        $categoryNames = explode(',', $request->get('name', []));
 
         return array_filter($categoryNames);
     }
