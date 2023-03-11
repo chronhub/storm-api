@@ -17,7 +17,7 @@ use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 
 #[
     Get(
-        path: '/api/storm/stream/category',
+        path: '/api/storm/stream/exists',
         description: 'Check if stream exists',
         tags: ['Stream'],
         parameters: [

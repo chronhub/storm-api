@@ -17,6 +17,70 @@
     ],
     "paths": {
         "/api/storm/stream": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Retrieve all stream events per stream name and aggregate id",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Aggregate id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "put": {
                 "tags": [
                     "Stream"
@@ -210,12 +274,12 @@
                 "tags": [
                     "Stream"
                 ],
-                "description": "Get category names separated by comma",
+                "description": "Get category name(s)",
                 "parameters": [
                     {
                         "name": "name",
                         "in": "query",
-                        "description": "Stream name",
+                        "description": "Get or or many category name(s) separated by comma",
                         "required": true,
                         "schema": {
                             "type": "array",
@@ -422,7 +486,7 @@
                 }
             }
         },
-        "/api/storm/stream/category": {
+        "/api/storm/stream/exists": {
             "get": {
                 "tags": [
                     "Stream"
@@ -552,72 +616,6 @@
                     },
                     "404": {
                         "description": "Projection not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/storm/stream/all": {
-            "get": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Retrieve all stream events per stream name and aggregate id",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Stream name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "id",
-                        "in": "query",
-                        "description": "Aggregate id",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "uuid"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/401"
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/403"
-                    },
-                    "500": {
-                        "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
                         "content": {
                             "application/json": {
                                 "schema": {

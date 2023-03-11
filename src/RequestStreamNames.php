@@ -54,7 +54,7 @@ final readonly class RequestStreamNames
     public function __invoke(Request $request): ResponseFactory
     {
         $validator = $this->validation->make($request->all(), [
-            'names' => 'required|string',
+            'name' => 'required|string',
         ]);
 
         if ($validator->fails()) {

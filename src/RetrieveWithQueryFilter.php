@@ -13,6 +13,7 @@ use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
+use function is_array;
 
 abstract readonly class RetrieveWithQueryFilter
 {
@@ -51,7 +52,7 @@ abstract readonly class RetrieveWithQueryFilter
         $events = [];
 
         foreach ($streamEvents as $streamEvent) {
-            if(!is_array($streamEvent)) {
+            if (! is_array($streamEvent)) {
                 $streamEvent = $this->eventSerializer->serializeEvent($streamEvent);
             }
 

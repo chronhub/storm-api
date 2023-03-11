@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api;
 
-use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 use Generator;
 use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
@@ -12,18 +11,18 @@ use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
-use Chronhub\Storm\Message\Message;
 use OpenApi\Attributes\JsonContent;
 use Chronhub\Storm\Stream\StreamName;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 use Chronhub\Storm\Http\Api\Support\GenericAggregateId;
-use Chronhub\Storm\Contracts\Serializer\MessageSerializer;
+use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
+use function is_array;
 
 #[
     Get(
-        path: '/api/storm/stream/all',
+        path: '/api/storm/stream',
         description: 'Retrieve all stream events per stream name and aggregate id',
         tags: ['Stream'],
         parameters: [
@@ -54,10 +53,10 @@ use Chronhub\Storm\Contracts\Serializer\MessageSerializer;
 ]
 final readonly class RetrieveAll
 {
-    public function __construct(private Chronicler            $chronicler,
+    public function __construct(private Chronicler $chronicler,
                                 private StreamEventSerializer $eventSerializer,
-                                private Factory               $validation,
-                                private ResponseFactory       $response)
+                                private Factory $validation,
+                                private ResponseFactory $response)
     {
     }
 
@@ -90,11 +89,11 @@ final readonly class RetrieveAll
         $events = [];
 
         foreach ($streamEvents as $streamEvent) {
-            if(!is_array($streamEvent)) {
+            if (! is_array($streamEvent)) {
                 $streamEvent = $this->eventSerializer->serializeEvent($streamEvent);
             }
 
-            $events[] =$streamEvent;
+            $events[] = $streamEvent;
         }
 
         return $events;
