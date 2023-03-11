@@ -27,7 +27,7 @@ use Chronhub\Storm\Http\Api\Response\ResponseFactory;
  *     ),
  *
  *     @OA\Response(
- *          response=200,
+ *          response=204,
  *          description="ok",
  *     )
  * )

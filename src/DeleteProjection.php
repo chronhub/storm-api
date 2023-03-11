@@ -36,7 +36,7 @@ use Chronhub\Storm\Contracts\Projector\ProjectorManager;
  *     ),
  *
  *     @OA\Response(
- *          response=200,
+ *          response=204,
  *          description="Projection deleted",
  *     )
  * )

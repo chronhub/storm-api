@@ -31,7 +31,7 @@ use Chronhub\Storm\Contracts\Chronicler\TransactionalChronicler;
  *     ),
  *
  *     @OA\Response(
- *          response=200,
+ *          response=204,
  *          description="ok",
  *     )
  * )
