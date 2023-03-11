@@ -64,14 +64,14 @@ final readonly class RetrieveFromIncludedStreamPosition extends RetrieveWithQuer
     {
         return $this->validation->make($request->all(), [
             'name' => 'required|string',
-            'position' => 'required|integer|min:0|not_in:0',
+            'from' => 'required|integer|min:0|not_in:0',
         ]);
     }
 
     protected function makeQueryFilter(Request $request): QueryFilter
     {
-        $position = (int) $request->get('position');
+        $position = (int) $request->get('from');
 
-        return ($this->queryFilter)($position);
+        return $this->query->filter($position);
     }
 }
