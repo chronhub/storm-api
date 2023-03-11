@@ -672,8 +672,7 @@
                         "description": "query offset",
                         "required": true,
                         "schema": {
-                            "type": "integer",
-                            "minimum": 1
+                            "type": "integer"
                         }
                     }
                 ],
