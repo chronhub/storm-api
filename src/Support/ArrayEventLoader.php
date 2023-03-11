@@ -29,6 +29,11 @@ final readonly class ArrayEventLoader implements StreamEventLoaderConnection
         try {
             $count = 0;
 
+            // fixMe
+            // events are generated as is
+            // not normalized to array with header and content
+            // stream persistence normalize but, we do to have a denormalized event
+
             foreach ($streamEvents as $streamEvent) {
                 if ($streamEvent instanceof stdClass) {
                     $streamEvent = (array) $streamEvent;

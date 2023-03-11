@@ -77,10 +77,14 @@ final readonly class RequestStreamNames
 
     private function convertStreamNamesFromRequest(Request $request): array
     {
-        $streamNames = array_filter(explode(',', $request->get('names')));
+        $names = $request->get('name');
+
+        if(!str_contains($names, ',')) {
+            return [new StreamName(trim($names))];
+        }
 
         return array_map(function (string $streamName): StreamName {
-            return new StreamName($streamName);
-        }, $streamNames);
+            return new StreamName(trim($streamName));
+        }, array_filter(explode(',', $names)));
     }
 }

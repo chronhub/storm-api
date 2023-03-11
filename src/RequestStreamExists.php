@@ -63,10 +63,7 @@ final readonly class RequestStreamExists
 
         $hasStream = $this->chronicler->hasStream($streamName);
 
-        $result = [$streamName->toString() => $hasStream];
-
         return $this->response
-            ->withStatusCode($hasStream ? 200 : 404)
-            ->withData($result);
+            ->withStatusCode($hasStream ? 204 : 404);
     }
 }
