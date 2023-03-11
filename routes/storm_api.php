@@ -5,7 +5,8 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/storm/stream')->group(function (): void {
-    Route::post('/', \Chronhub\Storm\Http\Api\PostStream::class);
+    Route::post('/', \Chronhub\Storm\Http\Api\CreateStream::class);
+    Route::put('/', \Chronhub\Storm\Http\Api\PostStream::class);
     Route::delete('/', \Chronhub\Storm\Http\Api\DeleteStream::class);
     Route::get('/', \Chronhub\Storm\Http\Api\RetrieveAll::class);
     Route::get('/paginated', \Chronhub\Storm\Http\Api\RetrieveAllPaginated::class);

@@ -4,41 +4,47 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api;
 
+use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Schema;
+use OpenApi\Attributes\Response;
+use OpenApi\Attributes\Parameter;
+use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Validation\Validator;
 use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 
-/**
- * @OA\Get(
- *     path="/api/storm/stream/from",
- *     tags={"Stream"},
- *     description="Get stream position by stream name",
- *
- *     @OA\Parameter(
- *     name="name",
- *     in="query",
- *     description="Stream name",
- *     required=true,
- *
- *     @OA\Schema(type="string")
- *     ),
- *
- *     @OA\Parameter(
- *     name="position",
- *     in="query",
- *     description="Stream position",
- *     required=true,
- *
- *     @OA\Schema(type="string")
- *     ),
- *
- *     @OA\Response(
- *          response=200,
- *          description="ok",
- *     )
- * )
- */
+#[
+    Get(
+        path: '/api/storm/stream/from',
+        description: 'Retrieve stream events from included position',
+        tags: ['Stream'],
+        parameters: [
+            new Parameter(
+                name: 'name',
+                description: 'Stream name',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'string')
+            ),
+            new Parameter(
+                name: 'from',
+                description: 'from included stream position',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'integer', minimum: 1)
+            ),
+        ],
+        responses: [
+            new Response(response: 200, description: 'ok', content: new JsonContent(type: 'array', items: new Items(type: 'object'))),
+            new Response(ref: '#/components/responses/400', response: 400),
+            new Response(ref: '#/components/responses/401', response: 401),
+            new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/500', response: 500),
+            new Response(response: 404, description: 'Stream not found', content: new JsonContent(ref: '#/components/schemas/Error')),
+        ],
+    ),
+]
 final readonly class RetrieveFromIncludedStreamPosition extends RetrieveWithQueryFilter
 {
     protected function makeValidator(Request $request): Validator

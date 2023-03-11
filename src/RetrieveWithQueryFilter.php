@@ -6,19 +6,18 @@ namespace Chronhub\Storm\Http\Api;
 
 use Generator;
 use Illuminate\Http\Request;
-use Chronhub\Storm\Message\Message;
 use Chronhub\Storm\Stream\StreamName;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
-use Chronhub\Storm\Contracts\Serializer\MessageSerializer;
+use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 
 abstract readonly class RetrieveWithQueryFilter
 {
     public function __construct(protected Chronicler $chronicler,
-                                protected MessageSerializer $messageSerializer,
+                                protected StreamEventSerializer $eventSerializer,
                                 protected Factory $validation,
                                 protected ResponseFactory $response,
                                 protected QueryFilter $queryFilter)
@@ -51,8 +50,12 @@ abstract readonly class RetrieveWithQueryFilter
     {
         $events = [];
 
-        foreach ($streamEvents as $message) {
-            $events[] = $this->messageSerializer->serializeMessage(new Message($message));
+        foreach ($streamEvents as $streamEvent) {
+            if(!is_array($streamEvent)) {
+                $streamEvent = $this->eventSerializer->serializeEvent($streamEvent);
+            }
+
+            $events[] = $streamEvent;
         }
 
         return $events;

@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Chronhub\Storm\Http\Api;
 
 use Throwable;
+use OpenApi\Attributes\Put;
 use Illuminate\Http\Request;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes\Schema;
+use OpenApi\Attributes\Response;
 use Chronhub\Storm\Stream\Stream;
+use OpenApi\Attributes\Parameter;
+use Illuminate\Support\MessageBag;
+use OpenApi\Attributes\JsonContent;
 use Chronhub\Storm\Stream\StreamName;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
@@ -15,27 +20,30 @@ use Chronhub\Storm\Contracts\Message\MessageFactory;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 use Chronhub\Storm\Contracts\Chronicler\TransactionalChronicler;
 
-/**
- * @OA\Post(
- *     path="/api/storm/stream",
- *     tags={"Stream"},
- *     description="Post stream",
- *
- *     @OA\Parameter(
- *     name="name",
- *     in="query",
- *     description="Projection name",
- *     required=true,
- *
- *     @OA\Schema(type="string")
- *     ),
- *
- *     @OA\Response(
- *          response=204,
- *          description="ok",
- *     )
- * )
- */
+#[
+    Put(
+        path: '/api/storm/stream',
+        description: 'Post stream events for one stream',
+        tags: ['Stream'],
+        parameters: [
+            new Parameter(
+                name: 'name',
+                description: 'Stream name',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'string'),
+            ),
+        ],
+        responses: [
+            new Response(response: 204, description: 'ok'),
+            new Response(ref: '#/components/responses/400', response: 400),
+            new Response(ref: '#/components/responses/401', response: 401),
+            new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/500', response: 500),
+            new Response(response: 404, description: 'Stream not found', content: new JsonContent(ref: '#/components/schemas/Error')),
+        ],
+    ),
+]
 final readonly class PostStream
 {
     public function __construct(private Chronicler $chronicler,
@@ -61,7 +69,7 @@ final readonly class PostStream
 
         $validatePayload = $this->validation->make($payload, [
             'headers' => 'array',
-            'payload' => 'array',
+            'content' => 'array',
         ]);
 
         if ($validatePayload->failed()) {
@@ -72,14 +80,20 @@ final readonly class PostStream
 
         $streamName = new StreamName($request->get('name'));
 
-        $this->persistStream(
-            $this->produceStream($streamName, $payload)
-        );
+        $streamEvents = $this->getEvents($payload);
+
+        if (empty($streamEvents)) {
+            return $this->response
+                ->withErrors(new MessageBag(['payload' => 'Payload must contain at least one event']))
+                ->withStatusCode(400);
+        }
+
+        $this->persistStream(new Stream($streamName, $streamEvents));
 
         return $this->response->withStatusCode(204);
     }
 
-    private function produceStream(StreamName $streamName, array $payload): Stream
+    private function getEvents(array $payload): array
     {
         $events = [];
 
@@ -87,11 +101,7 @@ final readonly class PostStream
             $events[] = ($this->messageFactory)($DomainEvent);
         }
 
-//        if (empty($messages)) {
-//            throw Exception("Messages can not be empty");
-//        }
-
-        return new Stream($streamName, $events);
+        return $events;
     }
 
     private function persistStream(Stream $stream): void

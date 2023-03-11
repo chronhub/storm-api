@@ -4,66 +4,68 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api;
 
+use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Schema;
+use OpenApi\Attributes\Response;
+use OpenApi\Attributes\Parameter;
+use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Validation\Validator;
 use Chronhub\Storm\Contracts\Chronicler\QueryFilter;
 
-/**
- * @OA\Get(
- *     path="/api/storm/stream/paginated",
- *     tags={"Stream"},
- *     description="Get paginated stream events by stream name and aggregate id",
- *
- *     @OA\Parameter(
- *     name="name",
- *     in="query",
- *     description="Projection name",
- *     required=true,
- *
- *     @OA\Schema(type="string")
- *     ),
- *
- *     @OA\Parameter(
- *     name="limit",
- *     in="query",
- *     description="Limit the number of stream events",
- *     required=true,
- *
- *     @OA\Schema(type="integer")
- *     ),
- *
- *     @OA\Parameter(
- *     name="direction",
- *     in="query",
- *     description="Sort directioon by ascendant or descendant",
- *     required=true,
- *
- *     @OA\Schema(type="string")
- *     ),
- *
- *     @OA\Parameter(
- *     name="offest",
- *     in="query",
- *     description="Query offset",
- *     required=true,
- *
- *     @OA\Schema(type="integer")
- *     ),
- *
- *     @OA\Response(
- *          response=200,
- *          description="ok",
- *     )
- * )
- */
+#[
+    Get(
+        path: '/api/storm/stream/paginated',
+        description: 'Retrieve paginated stream events per stream name',
+        tags: ['Stream'],
+        parameters: [
+            new Parameter(
+                name: 'name',
+                description: 'Stream name',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'string')
+            ),
+            new Parameter(
+                name: 'limit',
+                description: 'max number of events to retrieve',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'integer', minimum: 1)
+            ),
+            new Parameter(
+                name: 'direction',
+                description: 'sort direction',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'string', enum: ['asc', 'desc'])
+            ),
+            new Parameter(
+                name: 'offset',
+                description: 'query offset',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'integer', minimum: 1)
+            ),
+        ],
+        responses: [
+            new Response(response: 200, description: 'ok', content: new JsonContent(type: 'array', items: new Items(type: 'object'))),
+            new Response(ref: '#/components/responses/400', response: 400),
+            new Response(ref: '#/components/responses/401', response: 401),
+            new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/500', response: 500),
+            new Response(response: 404, description: 'Stream not found', content: new JsonContent(ref: '#/components/schemas/Error')),
+        ],
+    ),
+]
 final readonly class RetrieveAllPaginated extends RetrieveWithQueryFilter
 {
     protected function makeValidator(Request $request): Validator
     {
         return $this->validation->make($request->all(), [
             'name' => 'required|string',
-            'limit' => 'required|integer',
+            'limit' => 'required|integer|min:1',
             'direction' => 'required|string|in:asc,desc',
             'offset' => 'integer|min:0|not_in:0',
         ]);

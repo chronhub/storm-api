@@ -33,7 +33,10 @@
   "autoload-dev": {
     "psr-4": {
       "Chronhub\\Storm\\Http\\Api\\Tests\\": "tests"
-    }
+    },
+    "files": [
+      "server/StormApi.php"
+    ]
   },
   "scripts": {
     "test": "vendor/bin/phpunit",
@@ -41,7 +44,7 @@
     "rector-init": "vendor/bin/rector init",
     "rector-dry": "vendor/bin/rector process --dry-run",
     "rector-process": "vendor/bin/rector process",
-    "openapi": "vendor/bin/openapi ./src --bootstrap vendor/autoload.php --output ./resource/openapi.json --format json"
+    "openapi": "vendor/bin/openapi ./src ./server --bootstrap vendor/autoload.php --output ./resource/openapi.json --format json"
   },
   "config": {
     "sort-packages": true

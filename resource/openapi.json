@@ -1,8 +1,13 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Api storm",
-        "version": "0.1"
+        "title": "Storm API",
+        "description": "Storm API",
+        "contact": {
+            "name": "Chronhub",
+            "email": "chronhubgit@gmail.com"
+        },
+        "version": "1.0.0"
     },
     "servers": [
         {
@@ -11,6 +16,140 @@
         }
     ],
     "paths": {
+        "/api/storm/stream": {
+            "put": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Post stream events for one stream",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Create a new stream",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "419": {
+                        "description": "Stream already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Delete stream by stream name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/storm/projection": {
             "delete": {
                 "tags": [
@@ -30,7 +169,7 @@
                     {
                         "name": "include_events",
                         "in": "query",
-                        "description": "with emitted events",
+                        "description": "With emitted events",
                         "required": true,
                         "schema": {
                             "type": "boolean"
@@ -38,23 +177,403 @@
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "Projection deleted"
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Projection not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/api/storm/stream": {
+        "/api/storm/stream/categories": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
-                "description": "Get all stream events by stream name and aggregate id",
+                "description": "Get category names separated by comma",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/state": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Get state of projection name",
                 "parameters": [
                     {
                         "name": "name",
                         "in": "query",
                         "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Projection not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/status": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Get status of projection name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Projection not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/position": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Get stream positions of projection name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Projection not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/category": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Check if stream exists",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/names": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Get stream names separated by comma",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/projection/reset": {
+            "get": {
+                "tags": [
+                    "Projection"
+                ],
+                "description": "Reset projection by name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Projection name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Projection not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/all": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Retrieve all stream events per stream name and aggregate id",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -66,231 +585,46 @@
                         "description": "Aggregate id",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Post stream",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Projection name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Delete stream by stream name",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Projection name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/stream/categories": {
-            "get": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Get category names delimited by comma",
-                "parameters": [
-                    {
-                        "name": "categories",
-                        "in": "query",
-                        "description": "Filter category names ordered by ascendant name",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
                             }
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/projection/state": {
-            "get": {
-                "tags": [
-                    "Projection"
-                ],
-                "description": "Get projection state by stream name",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Projection name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/projection/status": {
-            "get": {
-                "tags": [
-                    "Projection"
-                ],
-                "description": "Get projection status by stream name",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Projection name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/projection/position": {
-            "get": {
-                "tags": [
-                    "Projection"
-                ],
-                "description": "Get stream position by stream name",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Projection name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/stream/exists": {
-            "get": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Check if stream exists by stream name",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Stream name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/stream/names": {
-            "get": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Get stream names",
-                "parameters": [
-                    {
-                        "name": "names",
-                        "in": "query",
-                        "description": "Filter stream names ordered by ascendant name",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
                             }
                         }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/projection/reset": {
-            "get": {
-                "tags": [
-                    "Projection"
-                ],
-                "description": "Reset projection by stream name",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Projection name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
                     }
                 }
             }
@@ -300,58 +634,7 @@
                 "tags": [
                     "Stream"
                 ],
-                "description": "Get paginated stream events by stream name and aggregate id",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Projection name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Limit the number of stream events",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "direction",
-                        "in": "query",
-                        "description": "Sort directioon by ascendant or descendant",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "offest",
-                        "in": "query",
-                        "description": "Query offset",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "ok"
-                    }
-                }
-            }
-        },
-        "/api/storm/stream/from": {
-            "get": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Get stream position by stream name",
+                "description": "Retrieve paginated stream events per stream name",
                 "parameters": [
                     {
                         "name": "name",
@@ -363,28 +646,84 @@
                         }
                     },
                     {
-                        "name": "position",
+                        "name": "limit",
                         "in": "query",
-                        "description": "Stream position",
+                        "description": "max number of events to retrieve",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "sort direction",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "query offset",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok"
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/api/storm/stream/from_to": {
+        "/api/storm/stream/from": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
-                "description": "Get stream events by stream name from one position to another position",
+                "description": "Retrieve stream events from included position",
                 "parameters": [
                     {
                         "name": "name",
@@ -398,25 +737,138 @@
                     {
                         "name": "from",
                         "in": "query",
-                        "description": "From stream position",
+                        "description": "from included stream position",
                         "required": true,
                         "schema": {
-                            "type": "integer"
-                        }
-                    },
-                    {
-                        "name": "to",
-                        "in": "query",
-                        "description": "To stream position",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "minimum": 1
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok"
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/storm/stream/from_to": {
+            "get": {
+                "tags": [
+                    "Stream"
+                ],
+                "description": "Retrieve stream events from included position to next position",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Stream name",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "from included stream position",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "to included stream position, must be greater than from",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 2
+                        }
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "description": "sort stream",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Stream not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -426,7 +878,7 @@
                 "tags": [
                     "Projection"
                 ],
-                "description": "Stop projection by stream name",
+                "description": "Stop projection by name",
                 "parameters": [
                     {
                         "name": "name",
@@ -439,11 +891,117 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "ok"
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/400"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/401"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/403"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/500"
+                    },
+                    "404": {
+                        "description": "Projection not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-    }
+    },
+    "components": {
+        "schemas": {
+            "Error": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "code": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "errors": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "code": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "400": {
+                "description": "Bad request",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "description": "Authentication failed",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "403": {
+                "description": "Authorization failed",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "500": {
+                "description": "Internal error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Stream",
+            "description": "Stream operations"
+        },
+        {
+            "name": "Projection",
+            "description": "Projection operations"
+        }
+    ]
 }

@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api;
 
+use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 use Generator;
+use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
-use OpenApi\Annotations as OA;
+use OpenApi\Attributes\Items;
+use OpenApi\Attributes\Schema;
+use OpenApi\Attributes\Response;
+use OpenApi\Attributes\Parameter;
 use Chronhub\Storm\Message\Message;
+use OpenApi\Attributes\JsonContent;
 use Chronhub\Storm\Stream\StreamName;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
@@ -15,42 +21,43 @@ use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 use Chronhub\Storm\Http\Api\Support\GenericAggregateId;
 use Chronhub\Storm\Contracts\Serializer\MessageSerializer;
 
-/**
- * @OA\Get(
- *     path="/api/storm/stream",
- *     tags={"Stream"},
- *     description="Get all stream events by stream name and aggregate id",
- *
- *     @OA\Parameter(
- *     name="name",
- *     in="query",
- *     description="Projection name",
- *     required=true,
- *
- *     @OA\Schema(type="string")
- *     ),
- *
- *     @OA\Parameter(
- *     name="id",
- *     in="query",
- *     description="Aggregate id",
- *     required=true,
- *
- *     @OA\Schema(type="string")
- *     ),
- *
- *     @OA\Response(
- *          response=200,
- *          description="ok",
- *     )
- * )
- */
+#[
+    Get(
+        path: '/api/storm/stream/all',
+        description: 'Retrieve all stream events per stream name and aggregate id',
+        tags: ['Stream'],
+        parameters: [
+            new Parameter(
+                name: 'name',
+                description: 'Stream name',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'string')
+            ),
+            new Parameter(
+                name: 'id',
+                description: 'Aggregate id',
+                in: 'query',
+                required: true,
+                schema: new Schema(type: 'string', format: 'uuid')
+            ),
+        ],
+        responses: [
+            new Response(response: 200, description: 'ok', content: new JsonContent(type: 'array', items: new Items(type: 'object'))),
+            new Response(ref: '#/components/responses/400', response: 400),
+            new Response(ref: '#/components/responses/401', response: 401),
+            new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/500', response: 500),
+            new Response(response: 404, description: 'Stream not found', content: new JsonContent(ref: '#/components/schemas/Error')),
+        ],
+    ),
+]
 final readonly class RetrieveAll
 {
-    public function __construct(private Chronicler $chronicler,
-                                private MessageSerializer $messageSerializer,
-                                private Factory $validation,
-                                private ResponseFactory $response)
+    public function __construct(private Chronicler            $chronicler,
+                                private StreamEventSerializer $eventSerializer,
+                                private Factory               $validation,
+                                private ResponseFactory       $response)
     {
     }
 
@@ -82,8 +89,12 @@ final readonly class RetrieveAll
     {
         $events = [];
 
-        foreach ($streamEvents as $message) {
-            $events[] = $this->messageSerializer->serializeMessage(new Message($message));
+        foreach ($streamEvents as $streamEvent) {
+            if(!is_array($streamEvent)) {
+                $streamEvent = $this->eventSerializer->serializeEvent($streamEvent);
+            }
+
+            $events[] =$streamEvent;
         }
 
         return $events;
