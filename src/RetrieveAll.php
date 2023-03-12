@@ -22,7 +22,8 @@ use function is_array;
 
 #[
     Get(
-        path: '/api/storm/stream',
+        path: '/stream',
+        operationId: 'retrieveAll',
         description: 'Retrieve all stream events per stream name and aggregate id',
         tags: ['Stream'],
         parameters: [

@@ -17,7 +17,8 @@ use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 
 #[
     Delete(
-        path: '/api/storm/stream',
+        path: '/stream',
+        operationId: 'deleteStream',
         description: 'Delete stream by stream name',
         tags: ['Stream'],
         parameters: [

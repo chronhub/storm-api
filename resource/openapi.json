@@ -11,17 +11,36 @@
     },
     "servers": [
         {
-            "url": "http://storm-api.dvl.to:80",
-            "description": "Local server"
+            "url": "{scheme}://{url}/{base_path}:{port}",
+            "description": "Local server",
+            "variables": {
+                "scheme": {
+                    "default": "http",
+                    "description": "scheme url"
+                },
+                "url": {
+                    "default": "storm-api.dvl.to/v1",
+                    "description": "server url"
+                },
+                "base_path": {
+                    "default": "api/storm",
+                    "description": "base path"
+                },
+                "port": {
+                    "default": "80",
+                    "description": "Server port"
+                }
+            }
         }
     ],
     "paths": {
-        "/api/storm/stream": {
+        "/stream": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
                 "description": "Retrieve all stream events per stream name and aggregate id",
+                "operationId": "retrieveAll",
                 "parameters": [
                     {
                         "name": "name",
@@ -86,6 +105,7 @@
                     "Stream"
                 ],
                 "description": "Post stream events for one stream",
+                "operationId": "postStream",
                 "parameters": [
                     {
                         "name": "name",
@@ -130,6 +150,7 @@
                     "Stream"
                 ],
                 "description": "Create a new stream",
+                "operationId": "createStream",
                 "parameters": [
                     {
                         "name": "name",
@@ -174,6 +195,7 @@
                     "Stream"
                 ],
                 "description": "Delete stream by stream name",
+                "operationId": "deleteStream",
                 "parameters": [
                     {
                         "name": "name",
@@ -214,12 +236,13 @@
                 }
             }
         },
-        "/api/storm/projection": {
+        "/projection": {
             "delete": {
                 "tags": [
                     "Projection"
                 ],
                 "description": "Delete projection by stream name",
+                "operationId": "deleteProjection",
                 "parameters": [
                     {
                         "name": "name",
@@ -269,12 +292,13 @@
                 }
             }
         },
-        "/api/storm/stream/categories": {
+        "/stream/categories": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
                 "description": "Get category name(s)",
+                "operationId": "requestCategoryNames",
                 "parameters": [
                     {
                         "name": "name",
@@ -318,12 +342,13 @@
                 }
             }
         },
-        "/api/storm/projection/state": {
+        "/projection/state": {
             "get": {
                 "tags": [
                     "Projection"
                 ],
                 "description": "Get state of projection name",
+                "operationId": "requestProjectionState",
                 "parameters": [
                     {
                         "name": "name",
@@ -374,12 +399,13 @@
                 }
             }
         },
-        "/api/storm/projection/status": {
+        "/projection/status": {
             "get": {
                 "tags": [
                     "Projection"
                 ],
                 "description": "Get status of projection name",
+                "operationId": "requestProjectionStatus",
                 "parameters": [
                     {
                         "name": "name",
@@ -430,12 +456,13 @@
                 }
             }
         },
-        "/api/storm/projection/position": {
+        "/projection/position": {
             "get": {
                 "tags": [
                     "Projection"
                 ],
                 "description": "Get stream positions of projection name",
+                "operationId": "requestProjectionStreamPosition",
                 "parameters": [
                     {
                         "name": "name",
@@ -486,12 +513,13 @@
                 }
             }
         },
-        "/api/storm/stream/exists": {
+        "/stream/exists": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
                 "description": "Check if stream exists",
+                "operationId": "streamExists",
                 "parameters": [
                     {
                         "name": "name",
@@ -532,12 +560,13 @@
                 }
             }
         },
-        "/api/storm/stream/names": {
+        "/stream/names": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
                 "description": "Get stream names separated by comma",
+                "operationId": "requestStreamNames",
                 "parameters": [
                     {
                         "name": "name",
@@ -581,12 +610,13 @@
                 }
             }
         },
-        "/api/storm/projection/reset": {
+        "/projection/reset": {
             "get": {
                 "tags": [
                     "Projection"
                 ],
                 "description": "Reset projection by name",
+                "operationId": "resetProjection",
                 "parameters": [
                     {
                         "name": "name",
@@ -627,12 +657,13 @@
                 }
             }
         },
-        "/api/storm/stream/paginated": {
+        "/stream/paginated": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
                 "description": "Retrieve paginated stream events per stream name",
+                "operationId": "retrieveAllPaginated",
                 "parameters": [
                     {
                         "name": "name",
@@ -715,12 +746,13 @@
                 }
             }
         },
-        "/api/storm/stream/from": {
+        "/stream/from": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
                 "description": "Retrieve stream events from included position",
+                "operationId": "retrieveFromIncludedStreamPosition",
                 "parameters": [
                     {
                         "name": "name",
@@ -781,12 +813,13 @@
                 }
             }
         },
-        "/api/storm/stream/from_to": {
+        "/stream/from_to": {
             "get": {
                 "tags": [
                     "Stream"
                 ],
                 "description": "Retrieve stream events from included position to next position",
+                "operationId": "retrieveFromToStreamPosition",
                 "parameters": [
                     {
                         "name": "name",
@@ -870,12 +903,13 @@
                 }
             }
         },
-        "/api/storm/projection/stop": {
+        "/projection/stop": {
             "get": {
                 "tags": [
                     "Projection"
                 ],
                 "description": "Stop projection by name",
+                "operationId": "stopProjection",
                 "parameters": [
                     {
                         "name": "name",

@@ -17,7 +17,8 @@ use Chronhub\Storm\Contracts\Projector\ProjectorManager;
 
 #[
     Delete(
-        path: '/api/storm/projection',
+        path: '/projection',
+        operationId: 'deleteProjection',
         description: 'Delete projection by stream name',
         tags: ['Projection'],
         parameters: [

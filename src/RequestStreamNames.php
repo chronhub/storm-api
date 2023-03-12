@@ -23,7 +23,8 @@ use function str_contains;
 
 #[
     Get(
-        path: '/api/storm/stream/names',
+        path: '/stream/names',
+        operationId: 'requestStreamNames',
         description: 'Get stream names separated by comma',
         tags: ['Stream'],
         parameters: [

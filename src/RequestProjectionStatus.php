@@ -17,7 +17,8 @@ use Chronhub\Storm\Contracts\Projector\ProjectorManager;
 
 #[
     Get(
-        path: '/api/storm/projection/status',
+        path: '/projection/status',
+        operationId: 'requestProjectionStatus',
         description: 'Get status of projection name',
         tags: ['Projection'],
         parameters: [

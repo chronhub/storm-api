@@ -16,7 +16,8 @@ use Chronhub\Storm\Contracts\Projector\ProjectorManager;
 
 #[
     Get(
-        path: '/api/storm/projection/stop',
+        path: '/projection/stop',
+        operationId: 'stopProjection',
         description: 'Stop projection by name',
         tags: ['Projection'],
         parameters: [

@@ -21,7 +21,8 @@ use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 
 #[
     Get(
-        path: '/api/storm/stream/from_to',
+        path: '/stream/from_to',
+        operationId: 'retrieveFromToStreamPosition',
         description: 'Retrieve stream events from included position to next position',
         tags: ['Stream'],
         parameters: [

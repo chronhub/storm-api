@@ -17,7 +17,8 @@ use Chronhub\Storm\Contracts\Projector\ProjectorManager;
 
 #[
     Get(
-        path: '/api/storm/projection/position',
+        path: '/projection/position',
+        operationId: 'requestProjectionStreamPosition',
         description: 'Get stream positions of projection name',
         tags: ['Projection'],
         parameters: [

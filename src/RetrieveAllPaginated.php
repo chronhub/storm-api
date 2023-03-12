@@ -21,7 +21,8 @@ use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 
 #[
     Get(
-        path: '/api/storm/stream/paginated',
+        path: '/stream/paginated',
+        operationId: 'retrieveAllPaginated',
         description: 'Retrieve paginated stream events per stream name',
         tags: ['Stream'],
         parameters: [

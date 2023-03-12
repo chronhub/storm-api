@@ -21,7 +21,8 @@ use function str_contains;
 
 #[
     Get(
-        path: '/api/storm/stream/categories',
+        path: '/stream/categories',
+        operationId: 'requestCategoryNames',
         description: 'Get category name(s)',
         tags: ['Stream'],
         parameters: [

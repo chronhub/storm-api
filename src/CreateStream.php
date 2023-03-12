@@ -20,7 +20,8 @@ use Chronhub\Storm\Contracts\Chronicler\TransactionalChronicler;
 
 #[
     Post(
-        path: '/api/storm/stream',
+        path: '/stream',
+        operationId: 'createStream',
         description: 'Create a new stream',
         tags: ['Stream'],
         parameters: [

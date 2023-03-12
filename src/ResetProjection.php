@@ -17,7 +17,8 @@ use Chronhub\Storm\Contracts\Projector\ProjectorManager;
 
 #[
     Get(
-        path: '/api/storm/projection/reset',
+        path: '/projection/reset',
+        operationId: 'resetProjection',
         description: 'Reset projection by name',
         tags: ['Projection'],
         parameters: [

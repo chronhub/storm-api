@@ -21,7 +21,8 @@ use Chronhub\Storm\Http\Api\QueryFilter\FromIncludedStreamPosition;
 
 #[
     Get(
-        path: '/api/storm/stream/from',
+        path: '/stream/from',
+        operationId: 'retrieveFromIncludedStreamPosition',
         description: 'Retrieve stream events from included position',
         tags: ['Stream'],
         parameters: [

@@ -22,7 +22,8 @@ use Chronhub\Storm\Contracts\Chronicler\TransactionalChronicler;
 
 #[
     Put(
-        path: '/api/storm/stream',
+        path: '/stream',
+        operationId: 'postStream',
         description: 'Post stream events for one stream',
         tags: ['Stream'],
         parameters: [
