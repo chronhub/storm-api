@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api\Support;
 
-use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 use stdClass;
 use Generator;
 use Chronhub\Storm\Stream\StreamName;
@@ -12,11 +11,12 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Chronhub\Storm\Chronicler\Exceptions\StreamNotFound;
 use Chronhub\Larastorm\Exceptions\ConnectionQueryFailure;
+use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
 use Chronhub\Larastorm\Support\Contracts\StreamEventLoaderConnection;
 
 final readonly class ArrayEventLoader implements StreamEventLoaderConnection
 {
-    public function __construct(private readonly StreamEventSerializer $eventSerializer)
+    public function __construct(private StreamEventSerializer $eventSerializer)
     {
     }
 
