@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "{scheme}://{url}/{base_path}:{port}",
+            "url": "{scheme}://{url}/{base_path}",
             "description": "Local server",
             "variables": {
                 "scheme": {
@@ -19,16 +19,12 @@
                     "description": "scheme url"
                 },
                 "url": {
-                    "default": "storm-api.dvl.to/v1",
+                    "default": "storm-api.dvl.to",
                     "description": "server url"
                 },
                 "base_path": {
-                    "default": "api/storm",
+                    "default": "api/v1/storm",
                     "description": "base path"
-                },
-                "port": {
-                    "default": "80",
-                    "description": "Server port"
                 }
             }
         }

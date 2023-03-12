@@ -17,7 +17,7 @@ use OpenApi\Attributes\ServerVariable;
     ),
 
     Server(
-        url: '{scheme}://{url}/{base_path}:{port}',
+        url: '{scheme}://{url}/{base_path}',
         description: 'Local server',
         variables: [
             new ServerVariable(
@@ -29,19 +29,13 @@ use OpenApi\Attributes\ServerVariable;
             new ServerVariable(
                 serverVariable: 'url',
                 description: 'server url',
-                default: 'storm-api.dvl.to/v1'
+                default: 'storm-api.dvl.to'
             ),
 
             new ServerVariable(
                 serverVariable: 'base_path',
                 description: 'base path',
-                default: 'api/storm'
-            ),
-
-            new ServerVariable(
-                serverVariable: 'port',
-                description: 'Server port',
-                default: '80'
+                default: 'api/v1/storm'
             ),
         ],
     ),
