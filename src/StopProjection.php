@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
-use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
 use Chronhub\Storm\Contracts\Projector\ProjectorManager;
@@ -34,8 +33,8 @@ use Chronhub\Storm\Contracts\Projector\ProjectorManager;
             new Response(ref: '#/components/responses/400', response: 400),
             new Response(ref: '#/components/responses/401', response: 401),
             new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/ProjectionNotFound', response: 404),
             new Response(ref: '#/components/responses/500', response: 500),
-            new Response(response: 404, description: 'Projection not found', content: new JsonContent(ref: '#/components/schemas/Error')),
         ],
     ),
 ]

@@ -4,60 +4,10 @@ declare(strict_types=1);
 
 namespace Chronhub\Storm\Http\Api\Response;
 
-use OpenApi\Attributes\Items;
-use OpenApi\Attributes\Schema;
-use OpenApi\Attributes\Property;
-use OpenApi\Attributes\Response;
 use Illuminate\Http\JsonResponse;
-use OpenApi\Attributes\Components;
-use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Support\Responsable;
 
-#[Components(
-    schemas: [
-        new Schema(
-            schema: 'Error',
-            properties: [
-                new Property(property: 'message', type: 'string'),
-                new Property(property: 'code', type: 'integer'),
-            ],
-            type: 'object',
-        ),
-
-        new Schema(
-            schema: 'ValidationError',
-            properties: [
-                new Property(property: 'message', type: 'string'),
-                new Property(property: 'errors', type: 'array', items: new Items(type: 'string')),
-                new Property(property: 'code', type: 'integer'),
-            ],
-            type: 'object',
-        ),
-    ],
-    responses: [
-        new Response(
-            response: 400,
-            description: 'Bad request',
-            content: new JsonContent(ref: '#/components/schemas/ValidationError')
-        ),
-        new Response(
-            response: 401,
-            description: 'Authentication failed',
-            content: new JsonContent(ref: '#/components/schemas/Error')
-        ),
-        new Response(
-            response: 403,
-            description: 'Authorization failed',
-            content: new JsonContent(ref: '#/components/schemas/Error')
-        ),
-        new Response(
-            response: 500,
-            description: 'Internal error',
-            content: new JsonContent(ref: '#/components/schemas/Error')
-        ),
-    ]
-)]
 class ResponseFactory implements Responsable
 {
     private ?MessageBag $errors = null;

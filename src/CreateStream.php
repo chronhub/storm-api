@@ -11,7 +11,6 @@ use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use Chronhub\Storm\Stream\Stream;
 use OpenApi\Attributes\Parameter;
-use OpenApi\Attributes\JsonContent;
 use Chronhub\Storm\Stream\StreamName;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
@@ -38,8 +37,8 @@ use Chronhub\Storm\Contracts\Chronicler\TransactionalChronicler;
             new Response(ref: '#/components/responses/400', response: 400),
             new Response(ref: '#/components/responses/401', response: 401),
             new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/StreamAlreadyExists', response: 419),
             new Response(ref: '#/components/responses/500', response: 500),
-            new Response(response: 419, description: 'Stream already exists', content: new JsonContent(ref: '#/components/schemas/Error')),
         ],
     ),
 ]

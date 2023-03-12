@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
-use OpenApi\Attributes\JsonContent;
 use Chronhub\Storm\Stream\StreamName;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
@@ -35,8 +34,8 @@ use Chronhub\Storm\Http\Api\Response\ResponseFactory;
             new Response(ref: '#/components/responses/400', response: 400),
             new Response(ref: '#/components/responses/401', response: 401),
             new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/StreamNotFound', response: 404),
             new Response(ref: '#/components/responses/500', response: 500),
-            new Response(response: 404, description: 'Stream not found', content: new JsonContent(ref: '#/components/schemas/Error')),
         ],
     ),
 ]

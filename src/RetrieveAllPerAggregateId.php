@@ -7,7 +7,6 @@ namespace Chronhub\Storm\Http\Api;
 use Generator;
 use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
-use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
@@ -23,7 +22,7 @@ use function is_array;
 #[
     Get(
         path: '/stream',
-        operationId: 'retrieveAll',
+        operationId: 'retrieveAllPerAggregateId',
         description: 'Retrieve all stream events per stream name and aggregate id',
         tags: ['Stream'],
         parameters: [
@@ -43,16 +42,16 @@ use function is_array;
             ),
         ],
         responses: [
-            new Response(response: 200, description: 'ok', content: new JsonContent(type: 'array', items: new Items(type: 'object'))),
+            new Response(response: 200, description: 'ok', content: new JsonContent(ref: '#/components/schemas/StreamEvents', type: 'object')),
             new Response(ref: '#/components/responses/400', response: 400),
             new Response(ref: '#/components/responses/401', response: 401),
             new Response(ref: '#/components/responses/403', response: 403),
+            new Response(ref: '#/components/responses/StreamNotFound', response: 404),
             new Response(ref: '#/components/responses/500', response: 500),
-            new Response(response: 404, description: 'Stream not found', content: new JsonContent(ref: '#/components/schemas/Error')),
         ],
     ),
 ]
-final readonly class RetrieveAll
+final readonly class RetrieveAllPerAggregateId
 {
     public function __construct(private Chronicler $chronicler,
                                 private StreamEventSerializer $eventSerializer,

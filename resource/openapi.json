@@ -36,7 +36,7 @@
                     "Stream"
                 ],
                 "description": "Retrieve all stream events per stream name and aggregate id",
-                "operationId": "retrieveAll",
+                "operationId": "retrieveAllPerAggregateId",
                 "parameters": [
                     {
                         "name": "name",
@@ -64,10 +64,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
+                                    "$ref": "#/components/schemas/StreamEvents"
                                 }
                             }
                         }
@@ -81,63 +78,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
-                    "500": {
-                        "$ref": "#/components/responses/500"
-                    },
                     "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "Stream"
-                ],
-                "description": "Post stream events for one stream",
-                "operationId": "postStream",
-                "parameters": [
-                    {
-                        "name": "name",
-                        "in": "query",
-                        "description": "Stream name",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "ok"
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/400"
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/401"
-                    },
-                    "403": {
-                        "$ref": "#/components/responses/403"
+                        "$ref": "#/components/responses/StreamNotFound"
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -171,18 +116,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "419": {
+                        "$ref": "#/components/responses/StreamAlreadyExists"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "419": {
-                        "description": "Stream already exists",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             },
@@ -216,18 +154,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/StreamNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -272,18 +203,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/ProjectionNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Projection not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -324,16 +248,6 @@
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -379,18 +293,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/StreamNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Projection not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -436,18 +343,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/ProjectionNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Projection not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -493,18 +393,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/ProjectionNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Projection not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -540,18 +433,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/StreamNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -592,16 +478,6 @@
                     },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -637,18 +513,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/ProjectionNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Projection not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -726,18 +595,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/StreamNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -793,18 +655,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/StreamNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -883,18 +738,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/StreamNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Stream not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -930,18 +778,11 @@
                     "403": {
                         "$ref": "#/components/responses/403"
                     },
+                    "404": {
+                        "$ref": "#/components/responses/ProjectionNotFound"
+                    },
                     "500": {
                         "$ref": "#/components/responses/500"
-                    },
-                    "404": {
-                        "description": "Projection not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Error"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -949,6 +790,83 @@
     },
     "components": {
         "schemas": {
+            "StreamEvents": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "no": {
+                            "$ref": "#/components/schemas/StreamEventNo"
+                        },
+                        "headers": {
+                            "$ref": "#/components/schemas/StreamEventHeaders"
+                        },
+                        "content": {
+                            "$ref": "#/components/schemas/StreamEventContent"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "StreamEventNo": {
+                "required": [
+                    "no"
+                ],
+                "properties": {
+                    "no": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object",
+                "additionalProperties": true
+            },
+            "StreamEventHeaders": {
+                "required": [
+                    "__event_id",
+                    "__event_time",
+                    "__event_type",
+                    "__aggregate_id",
+                    "__aggregate_id_type",
+                    "__aggregate_type",
+                    "__aggregate_version"
+                ],
+                "properties": {
+                    "__event_id": {
+                        "type": "string"
+                    },
+                    "__event_time": {
+                        "type": "string"
+                    },
+                    "__event_type": {
+                        "type": "string"
+                    },
+                    "__aggregate_id": {
+                        "type": "string"
+                    },
+                    "__aggregate_id_type": {
+                        "type": "string"
+                    },
+                    "__aggregate_type": {
+                        "type": "string"
+                    },
+                    "__aggregate_version": {
+                        "type": "integer"
+                    },
+                    "__internal_position": {
+                        "type": "integer"
+                    },
+                    "__event_causation_id": {
+                        "type": "string"
+                    },
+                    "__event_causation_type": {
+                        "type": "string"
+                    }
+                },
+                "type": "object",
+                "additionalProperties": true
+            },
+            "StreamEventContent": {
+                "type": "object"
+            },
             "Error": {
                 "properties": {
                     "message": {
@@ -1001,6 +919,36 @@
             },
             "403": {
                 "description": "Authorization failed",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "StreamNotFound": {
+                "description": "Stream not found, either stream name does not exists or no more stream events to retrieve",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "ProjectionNotFound": {
+                "description": "Projection not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            },
+            "StreamAlreadyExists": {
+                "description": "Stream already exists",
                 "content": {
                     "application/json": {
                         "schema": {

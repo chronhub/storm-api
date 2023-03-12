@@ -35,7 +35,8 @@
       "Chronhub\\Storm\\Http\\Api\\Tests\\": "tests"
     },
     "files": [
-      "server/StormApi.php"
+      "server/StormApi.php",
+      "server/Component.php"
     ]
   },
   "scripts": {

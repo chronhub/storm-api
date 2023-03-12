@@ -10,7 +10,6 @@ use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
-use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Validation\Factory;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
 use Chronhub\Storm\Http\Api\Response\ResponseFactory;
@@ -40,7 +39,6 @@ use function str_contains;
             new Response(ref: '#/components/responses/401', response: 401),
             new Response(ref: '#/components/responses/403', response: 403),
             new Response(ref: '#/components/responses/500', response: 500),
-            new Response(response: 404, description: 'Stream not found', content: new JsonContent(ref: '#/components/schemas/Error')),
         ],
     ),
 ]
