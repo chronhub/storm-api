@@ -15,7 +15,7 @@ use Chronhub\Storm\Chronicler\Exceptions\StreamNotFound;
 use Chronhub\Storm\Projector\Exceptions\ProjectionNotFound;
 use Chronhub\Storm\Chronicler\Exceptions\StreamAlreadyExists;
 
-final readonly class ApiExceptionHandler
+final readonly class StormApiExceptionHandler
 {
     public function __construct(private ResponseFactory $response,
                                 private bool $debug = false)
