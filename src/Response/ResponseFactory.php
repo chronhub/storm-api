@@ -60,9 +60,9 @@ use Illuminate\Contracts\Support\Responsable;
 )]
 class ResponseFactory implements Responsable
 {
-    private ?string $message = null;
-
     private ?MessageBag $errors = null;
+
+    private ?string $message = null;
 
     private array $headers = [];
 
