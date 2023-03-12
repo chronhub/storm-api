@@ -6,7 +6,6 @@ namespace Chronhub\Storm\Http\Api;
 
 use OpenApi\Attributes\Get;
 use Illuminate\Http\Request;
-use OpenApi\Attributes\Items;
 use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
@@ -56,7 +55,7 @@ use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
             ),
         ],
         responses: [
-            new Response(response: 200, description: 'ok', content: new JsonContent(type: 'array', items: new Items(type: 'object'))),
+            new Response(response: 200, description: 'ok', content: new JsonContent(ref: '#/components/schemas/StreamEventsData', type: 'object')),
             new Response(ref: '#/components/responses/400', response: 400),
             new Response(ref: '#/components/responses/401', response: 401),
             new Response(ref: '#/components/responses/403', response: 403),

@@ -15,27 +15,39 @@ use OpenApi\Attributes\JsonContent;
         // StreamEvents
 
         new Schema(
+            schema: 'StreamEventsData',
+            required: ['data'],
+            properties: [
+                new Property(
+                    property: 'data',
+                    ref: '#/components/schemas/StreamEvents',
+                    type: 'object',
+                ),
+            ],
+            type: 'object',
+        ),
+
+        new Schema(
             schema: 'StreamEvents',
-            type: 'array',
-            items: new Items(
-                properties: [
-                    new Property(
-                        property: 'no',
-                        ref: '#/components/schemas/StreamEventNo',
-                        type: 'object',
-                    ),
-                    new Property(
-                        property: 'headers',
-                        ref: '#/components/schemas/StreamEventHeaders',
-                        type: 'object',
-                    ),
-                    new Property(
-                        property: 'content',
-                        ref: '#/components/schemas/StreamEventContent',
-                        type: 'object',
-                    ),
-                ],
-            ),
+            required: ['no', 'headers', 'content'],
+            properties: [
+                new Property(
+                    property: 'no',
+                    ref: '#/components/schemas/StreamEventNo',
+                    type: 'object',
+                ),
+                new Property(
+                    property: 'headers',
+                    ref: '#/components/schemas/StreamEventHeaders',
+                    type: 'object',
+                ),
+                new Property(
+                    property: 'content',
+                    ref: '#/components/schemas/StreamEventContent',
+                    type: 'object',
+                ),
+            ],
+            type: 'object',
         ),
 
         new Schema(
@@ -59,15 +71,15 @@ use OpenApi\Attributes\JsonContent;
                 '__aggregate_version',
             ],
             properties: [
-                new Property(property: '__event_id', type: 'string'),
-                new Property(property: '__event_time', type: 'string'),
+                new Property(property: '__event_id', type: 'string', format: 'uuid'),
+                new Property(property: '__event_time', type: 'string', format: 'date-time'),
                 new Property(property: '__event_type', type: 'string'),
-                new Property(property: '__aggregate_id', type: 'string'),
+                new Property(property: '__aggregate_id', type: 'string', format: 'uuid'),
                 new Property(property: '__aggregate_id_type', type: 'string'),
                 new Property(property: '__aggregate_type', type: 'string'),
-                new Property(property: '__aggregate_version', type: 'integer'),
-                new Property(property: '__internal_position', type: 'integer'),
-                new Property(property: '__event_causation_id', type: 'string'),
+                new Property(property: '__aggregate_version', type: 'integer', minimum: 1),
+                new Property(property: '__internal_position', type: 'integer', minimum: 1),
+                new Property(property: '__event_causation_id', type: 'string', format: 'uuid'),
                 new Property(property: '__event_causation_type', type: 'string'),
             ],
             type: 'object',

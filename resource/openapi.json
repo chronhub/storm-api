@@ -64,7 +64,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/StreamEvents"
+                                    "$ref": "#/components/schemas/StreamEventsData"
                                 }
                             }
                         }
@@ -578,10 +578,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
+                                    "$ref": "#/components/schemas/StreamEventsData"
                                 }
                             }
                         }
@@ -638,10 +635,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
+                                    "$ref": "#/components/schemas/StreamEventsData"
                                 }
                             }
                         }
@@ -721,10 +715,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object"
-                                    }
+                                    "$ref": "#/components/schemas/StreamEventsData"
                                 }
                             }
                         }
@@ -790,22 +781,35 @@
     },
     "components": {
         "schemas": {
+            "StreamEventsData": {
+                "required": [
+                    "data"
+                ],
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/StreamEvents"
+                    }
+                },
+                "type": "object"
+            },
             "StreamEvents": {
-                "type": "array",
-                "items": {
-                    "properties": {
-                        "no": {
-                            "$ref": "#/components/schemas/StreamEventNo"
-                        },
-                        "headers": {
-                            "$ref": "#/components/schemas/StreamEventHeaders"
-                        },
-                        "content": {
-                            "$ref": "#/components/schemas/StreamEventContent"
-                        }
+                "required": [
+                    "no",
+                    "headers",
+                    "content"
+                ],
+                "properties": {
+                    "no": {
+                        "$ref": "#/components/schemas/StreamEventNo"
                     },
-                    "type": "object"
-                }
+                    "headers": {
+                        "$ref": "#/components/schemas/StreamEventHeaders"
+                    },
+                    "content": {
+                        "$ref": "#/components/schemas/StreamEventContent"
+                    }
+                },
+                "type": "object"
             },
             "StreamEventNo": {
                 "required": [
@@ -831,16 +835,19 @@
                 ],
                 "properties": {
                     "__event_id": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "__event_time": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "__event_type": {
                         "type": "string"
                     },
                     "__aggregate_id": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "__aggregate_id_type": {
                         "type": "string"
@@ -849,13 +856,16 @@
                         "type": "string"
                     },
                     "__aggregate_version": {
-                        "type": "integer"
+                        "type": "integer",
+                        "minimum": 1
                     },
                     "__internal_position": {
-                        "type": "integer"
+                        "type": "integer",
+                        "minimum": 1
                     },
                     "__event_causation_id": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "__event_causation_type": {
                         "type": "string"
