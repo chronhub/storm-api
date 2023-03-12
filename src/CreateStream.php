@@ -56,7 +56,7 @@ final readonly class CreateStream
             'name' => 'required|string',
         ]);
 
-        if ($validateStream->failed()) {
+        if ($validateStream->fails()) {
             return $this->response
                 ->withErrors($validateStream->errors())
                 ->withStatusCode(400);
