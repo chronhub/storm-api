@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use OpenApi\Attributes\Schema;
 use OpenApi\Attributes\Response;
 use OpenApi\Attributes\Parameter;
-use OpenApi\Attributes\JsonContent;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
 use Chronhub\Storm\Contracts\Chronicler\Chronicler;
@@ -55,7 +54,7 @@ use Chronhub\Storm\Contracts\Serializer\StreamEventSerializer;
             ),
         ],
         responses: [
-            new Response(response: 200, description: 'ok', content: new JsonContent(ref: '#/components/schemas/StreamEventsData', type: 'object')),
+            new Response(ref: '#/components/responses/StreamEvents', response: 200),
             new Response(ref: '#/components/responses/400', response: 400),
             new Response(ref: '#/components/responses/401', response: 401),
             new Response(ref: '#/components/responses/403', response: 403),

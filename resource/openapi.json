@@ -60,14 +60,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/StreamEventsData"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/StreamEvents"
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
@@ -574,14 +567,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/StreamEventsData"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/StreamEvents"
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
@@ -631,14 +617,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/StreamEventsData"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/StreamEvents"
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
@@ -711,14 +690,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "ok",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/StreamEventsData"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/StreamEvents"
                     },
                     "400": {
                         "$ref": "#/components/responses/400"
@@ -781,16 +753,29 @@
     },
     "components": {
         "schemas": {
-            "StreamEventsData": {
-                "required": [
-                    "data"
-                ],
+            "BodyData": {
                 "properties": {
                     "data": {
-                        "$ref": "#/components/schemas/StreamEvents"
+                        "type": "object"
                     }
                 },
-                "type": "object"
+                "type": "object",
+                "anyOf": [
+                    {
+                        "$ref": "#/components/schemas/StreamEventsData"
+                    }
+                ]
+            },
+            "StreamEventsData": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "data": {
+                            "$ref": "#/components/schemas/StreamEvents"
+                        }
+                    },
+                    "type": "object"
+                }
             },
             "StreamEvents": {
                 "required": [
@@ -889,24 +874,37 @@
                 "type": "object"
             },
             "ValidationError": {
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "errors": {
-                        "type": "array",
-                        "items": {
+                "type": "array",
+                "items": {
+                    "properties": {
+                        "message": {
                             "type": "string"
+                        },
+                        "errors": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "code": {
+                            "type": "integer"
                         }
                     },
-                    "code": {
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
+                    "type": "object"
+                }
             }
         },
         "responses": {
+            "StreamEvents": {
+                "description": "Stream events",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/BodyData"
+                        }
+                    }
+                }
+            },
             "400": {
                 "description": "Bad request",
                 "content": {
