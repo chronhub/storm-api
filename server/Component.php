@@ -17,30 +17,15 @@ use OpenApi\Attributes\JsonContent;
             properties: [
                 new Property(
                     property: 'data',
-                    type: 'object',
+                    type: 'array',
+                    items: new Items(
+                        properties: [
+                            new Property(ref: '#/components/schemas/StreamEvents', type: 'object'),
+                        ]
+                    ),
                 ),
             ],
             type: 'object',
-            anyOf: [
-                new Schema(
-                    ref: '#/components/schemas/StreamEventsData',
-                    type: 'object',
-                ),
-            ],
-        ),
-
-        new Schema(
-            schema: 'StreamEventsData',
-            type: 'array',
-            items: new Items(
-                properties: [
-                    new Property(
-                        property: 'data',
-                        ref: '#/components/schemas/StreamEvents',
-                        type: 'object',
-                    ),
-                ]
-            ),
         ),
 
         new Schema(
@@ -75,7 +60,6 @@ use OpenApi\Attributes\JsonContent;
             type: 'object',
             additionalProperties: true,
         ),
-
         new Schema(
             schema: 'StreamEventHeaders',
             required: [
@@ -122,13 +106,7 @@ use OpenApi\Attributes\JsonContent;
         new Schema(
             schema: 'ValidationError',
             type: 'array',
-            items: new Items(
-                properties: [
-                    new Property(property: 'message', type: 'string'),
-                    new Property(property: 'errors', type: 'array', items: new Items(type: 'string')),
-                    new Property(property: 'code', type: 'integer'),
-                ],
-            ),
+            items: new Items(),
         ),
     ],
     responses: [
@@ -144,7 +122,16 @@ use OpenApi\Attributes\JsonContent;
         new Response(
             response: 400,
             description: 'Bad request',
-            content: new JsonContent(ref: '#/components/schemas/ValidationError')
+            content: new JsonContent(
+                ref: '#/components/schemas/ValidationError',
+                properties: [
+                    new Property(
+                        property: 'errors',
+                        type: 'object',
+                    ),
+                ],
+                type: 'object',
+            )
         ),
         new Response(
             response: 401,

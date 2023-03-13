@@ -756,26 +756,18 @@
             "BodyData": {
                 "properties": {
                     "data": {
-                        "type": "object"
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "": {
+                                    "$ref": "#/components/schemas/StreamEvents"
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
-                "type": "object",
-                "anyOf": [
-                    {
-                        "$ref": "#/components/schemas/StreamEventsData"
-                    }
-                ]
-            },
-            "StreamEventsData": {
-                "type": "array",
-                "items": {
-                    "properties": {
-                        "data": {
-                            "$ref": "#/components/schemas/StreamEvents"
-                        }
-                    },
-                    "type": "object"
-                }
+                "type": "object"
             },
             "StreamEvents": {
                 "required": [
@@ -875,23 +867,7 @@
             },
             "ValidationError": {
                 "type": "array",
-                "items": {
-                    "properties": {
-                        "message": {
-                            "type": "string"
-                        },
-                        "errors": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        },
-                        "code": {
-                            "type": "integer"
-                        }
-                    },
-                    "type": "object"
-                }
+                "items": {}
             }
         },
         "responses": {
