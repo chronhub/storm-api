@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Storm\Api\Compiler;
 
 use ApiPlatform\Metadata\ApiProperty;
-use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Resource\Factory\AttributesResourceMetadataCollectionFactory;
 use ApiPlatform\Metadata\Resource\Factory\AttributesResourceNameCollectionFactory;
+use ApiPlatform\Metadata\Resource\Factory\InputOutputResourceMetadataCollectionFactory;
 use LogicException;
 use Override;
 use ReflectionClass;
@@ -20,19 +21,19 @@ use function is_string;
 use function sprintf;
 
 /**
- * Refuses at BUILD a property-level `security` expression on a custom input DTO: API Platform
- * never evaluates `ApiProperty(security:)` during denormalization of an input class, so the
- * declaration reads as a guard while guarding nothing, and the property it decorates is written
- * from the request body for every caller. The hazard was documented prose; a gate in the same
- * spirit as the freshness topology guard turns it into a compile witness.
+ * Rejects property-level `security` declarations on the custom input DTOs it discovers.
  *
- * The check fires only when the operation's input class differs from the resource class: on the
- * resource itself the expression is evaluated on the read side and is a legitimate shaping tool.
- * The remedy the refusal names: move the check to the operation's `security`, or decide it in
- * the processor, where the actor and the command meet.
+ * This is a build-time policy, not proof that API Platform ignores the expression. Property
+ * expressions can be evaluated when a resource access checker is available. Custom input
+ * denormalization can lose the operation context and its `throw_on_access_denied` default,
+ * allowing a denied write to be reverted without an explicit HTTP refusal. Use operation-level
+ * security or an authorization decision in the processor when the write must be refused.
  *
- * Same discovery boundary as the topology gate, stated honestly: attribute-discovered resources
- * over `api_platform.resource_class_directories`; XML/PHP metadata escapes it.
+ * Discovery covers attribute resources in `api_platform.resource_class_directories` and input
+ * classes resolved from declared or generated HTTP operations, including resource-level input defaults.
+ * Explicit operation input overrides are respected; XML and PHP metadata are outside this discovery.
+ * GraphQL operations are not inspected.
+ * The resource itself is allowed as its own input. `securityPostDenormalize` is not inspected.
  */
 final class GuardInputPropertySecurityPass implements CompilerPassInterface
 {
@@ -82,16 +83,16 @@ final class GuardInputPropertySecurityPass implements CompilerPassInterface
      */
     private function inputClasses(string $resourceClass): iterable
     {
-        foreach (new ReflectionClass($resourceClass)->getAttributes(ApiResource::class) as $attribute) {
-            $resource = $attribute->newInstance();
+        $metadata = new InputOutputResourceMetadataCollectionFactory(new AttributesResourceMetadataCollectionFactory);
 
-            foreach ($resource->getOperations() ?? [] as $operation) {
+        foreach ($metadata->create($resourceClass) as $resource) {
+            foreach ($resource->getOperations() ?? [] as $operationName => $operation) {
                 $input = $operation->getInput();
                 $class = is_array($input) ? ($input['class'] ?? null) : (is_string($input) ? $input : null);
 
                 if (is_string($class) && $class !== $resourceClass && class_exists($class)) {
                     /** @var class-string $class */
-                    yield $resourceClass.'::'.($operation->getName() ?? $operation::class) => $class;
+                    yield $resourceClass.'::'.$operationName => $class;
                 }
             }
         }
@@ -109,10 +110,10 @@ final class GuardInputPropertySecurityPass implements CompilerPassInterface
             foreach ($property->getAttributes(ApiProperty::class) as $attribute) {
                 if ($attribute->newInstance()->getSecurity() !== null) {
                     throw new LogicException(sprintf(
-                        'Input DTO "%s" (operation "%s") declares ApiProperty(security:) on "$%s" — property-level'
-                        .' security is NEVER evaluated on a custom input class, so the expression guards nothing'
-                        .' and the property is written from the body for every caller. Move the check to the'
-                        .' operation\'s security, or decide it in the processor, where actor and command meet.',
+                        'Input DTO "%s" (operation "%s") declares ApiProperty(security:) on "$%s".'
+                        .' Storm rejects property-level security on custom input DTOs at build time.'
+                        .' Use operation-level security or an authorization decision in the processor'
+                        .' when a denied write must stop processing.',
                         $inputClass,
                         $where,
                         $property->getName(),

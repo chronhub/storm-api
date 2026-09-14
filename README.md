@@ -82,10 +82,28 @@ overrides, none a cage:
 | Prepended default | Why |
 |---|---|
 | `strict_query_parameter_validation: true` | an unknown query parameter is a 400, never silently ignored |
-| `extra_properties.throw_on_access_denied: true` | a **write** to a property the caller may not change is an explicit 403, never a silent revert-and-2xx (the flag drives the post-denormalize check, `securityPostDenormalize`); reads stay per-role shaping. ⚠️ Only on a resource-as-input: custom input DTOs ride the plain ObjectNormalizer and property security is NEVER evaluated there |
+| `extra_properties.throw_on_access_denied: true` | With the security stack active, a denied `securityPostDenormalize` write on a resource-as-input raises 403 instead of silently reverting the field. Custom input denormalization can lose this operation-level default; see the boundary below. |
 | `formats: { json }` | a CQRS bridge needs no Hydra vocabulary; one line re-enables it |
 | `doctrine: false` | the bridge never rides the ORM — and letting it auto-enable breaks any app without `api-platform/doctrine-orm` |
 | `framework.property_access` on | opt-in outside the full-stack; the item normalizer needs it |
+
+### Custom input security boundary
+
+API Platform can evaluate property security expressions on custom input DTOs when a resource
+access checker is available. Without the security stack, an expression alone does not enforce
+access control.
+
+Custom input denormalization removes the operation from its context. The operation-level
+`throw_on_access_denied` default can therefore be lost even though `securityPostDenormalize`
+still runs: a denied value is reverted, and processing can continue with a successful response.
+A resource-as-input retains the operation context and its explicit refusal. Use operation-level
+security or an authorization decision in the processor when a denied write must stop processing.
+
+`GuardInputPropertySecurityPass` rejects `ApiProperty(security:)` on custom inputs
+resolved from resource attributes, including resource-level defaults and generated HTTP operations.
+Explicit operation input overrides are respected. GraphQL operations and
+`securityPostDenormalize` are not inspected. A successful build
+is not a complete validation of an application's authorization rules.
 
 So the documented app-side minimum shrinks to:
 

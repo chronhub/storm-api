@@ -7,8 +7,7 @@ namespace Storm\Api\Tests\Fixture\InputSecurity;
 use ApiPlatform\Metadata\ApiProperty;
 
 /**
- * The trap fixture: a custom input DTO whose property claims a security expression API Platform
- * will never evaluate; the guard pass must refuse the build.
+ * Declares property security on a custom input that the build policy refuses.
  */
 final class SecuredInput
 {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Storm\Api\Cache;
 
 use ApiPlatform\HttpCache\PurgerInterface;
+use ApiPlatform\Metadata\CollectionOperationInterface;
 use ApiPlatform\Metadata\Operation;
 use LogicException;
 use Storm\Api\Metadata\ResourceCache;
@@ -112,7 +113,7 @@ final readonly class ResourceCacheHeaders
             }
         }
 
-        if ($cache->etagProperty !== null) {
+        if ($cache->etagProperty !== null && ! $operation instanceof CollectionOperationInterface) {
             $data = $request->attributes->get('data');
 
             if (is_object($data)) {

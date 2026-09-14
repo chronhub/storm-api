@@ -6,6 +6,9 @@ namespace Storm\Api\Tests\Cache;
 
 use ApiPlatform\HttpCache\PurgerInterface;
 use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\State\Pagination\TraversablePaginator;
+use ArrayIterator;
 use LogicException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -20,6 +23,59 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 final class ResourceCacheHeadersTest extends TestCase
 {
+    #[Test]
+    public function a_collection_object_keeps_its_body_etag_and_projection_headers(): void
+    {
+        foreach ([
+            new TraversablePaginator(new ArrayIterator([]), 1, 10, 0),
+            new class() extends ArrayIterator
+            {
+                public int $version = 7;
+            },
+        ] as $collection) {
+            $declaration = ['etag_property' => 'version', 'projection' => 'articles'];
+            $event = $this->eventFor(declaration: $declaration, data: $collection);
+            $event->getRequest()->attributes->set('_api_operation', new GetCollection(extraProperties: [ResourceCache::KEY => $declaration]));
+            $response = $event->getResponse();
+            $response->setEtag('body-hash');
+            $response->setVary('Accept');
+
+            try {
+                (new ResourceCacheHeaders)($event);
+            } catch (LogicException $e) {
+                self::fail($e->getMessage());
+            }
+
+            self::assertSame(200, $response->getStatusCode());
+            self::assertSame('"body-hash"', $response->getEtag());
+            self::assertSame('{"id":"a1"}', $response->getContent());
+            self::assertSame('storm-projection-articles', $response->headers->get('Surrogate-Key'));
+            self::assertContains('Accept', $response->getVary());
+            self::assertContains('Authorization', $response->getVary());
+            self::assertContains('Cookie', $response->getVary());
+        }
+    }
+
+    #[Test]
+    public function a_whitespace_only_surrogate_header_is_replaced_with_the_projection_tag(): void
+    {
+        $event = $this->eventFor(declaration: ['projection' => 'articles']);
+        $event->getResponse()->headers->set('Surrogate-Key', " \t ");
+        (new ResourceCacheHeaders)($event);
+        self::assertSame('storm-projection-articles', $event->getResponse()->headers->get('Surrogate-Key'));
+    }
+
+    #[Test]
+    public function existing_surrogate_keys_are_merged_without_a_purger(): void
+    {
+        $event = $this->eventFor(declaration: ['projection' => 'articles']);
+        $event->getResponse()->headers->set('Surrogate-Key', 'existing-tag other-tag');
+
+        (new ResourceCacheHeaders)($event);
+
+        self::assertSame('existing-tag other-tag storm-projection-articles', $event->getResponse()->headers->get('Surrogate-Key'));
+    }
+
     #[Test]
     public function the_declared_version_property_becomes_the_etag_and_the_projection_the_surrogate_key(): void
     {
