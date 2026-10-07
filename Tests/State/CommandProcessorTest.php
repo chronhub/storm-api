@@ -280,26 +280,6 @@ final class CommandProcessorTest extends TestCase
     }
 
     #[Test]
-    public function an_idempotency_key_becomes_a_deterministic_bus_identity(): void
-    {
-        // the replay contract: the same client key on the same command class must re-dispatch the
-        // SAME message id, so the consumer inbox can skip-ack the retried copy of an async write;
-        // and the id is bound to the command class, so one key on two endpoints never collides
-        $request = Request::create('/books/b7/shelve', 'POST', server: ['HTTP_IDEMPOTENCY_KEY' => 'client-key-1']);
-
-        $processor = new ShelveBookProcessor($this->bus(), $this->locator([]));
-        $processor->process(null, new Post, ['id' => 'b7'], ['request' => $request]);
-        $first = $this->dispatchedStamps;
-
-        $processor->process(null, new Post, ['id' => 'b7'], ['request' => $request]);
-
-        self::assertCount(1, $first);
-        self::assertInstanceOf(MessageIdStamp::class, $first[0]);
-        self::assertStringStartsWith('idem-', $first[0]->id);
-        self::assertEquals($first, $this->dispatchedStamps, 'the replayed request carries the SAME bus identity');
-    }
-
-    #[Test]
     public function without_the_header_no_identity_is_imposed(): void
     {
         // no key, no opinion: the metadata middleware assigns its fresh id per dispatch, the

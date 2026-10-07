@@ -10,15 +10,22 @@ use LogicException;
 use Override;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Storm\Api\Error\ApiProblem;
 use Storm\Api\Freshness\FreshnessStrategy;
 use Storm\Api\Freshness\WriteReceipt;
 use Storm\Api\Metadata\ReadAfterWrite;
+use Storm\Contracts\Chronicler\IdempotencyConflict;
+use Storm\Contracts\Chronicler\IdempotencyRegistry;
+use Storm\Story\Stamp\ActorStamp;
+use Storm\Story\Stamp\CorrelationStamp;
 use Storm\Story\Stamp\MessageIdStamp;
+use Storm\Story\Stamp\TenantStamp;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\AutowireLocator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -66,6 +73,7 @@ abstract class CommandProcessor implements ProcessorInterface
         #[AutowireLocator(FreshnessStrategy::class)]
         private readonly ContainerInterface $strategies,
         private readonly ?FreshnessStrategy $freshness = null,
+        private readonly ?IdempotencyRegistry $idempotency = null,
     ) {}
 
     /**
@@ -73,6 +81,7 @@ abstract class CommandProcessor implements ProcessorInterface
      *
      * @return TResource|Response
      *
+     * @throws ApiProblem when a keyed request lacks a principal or conflicts with its previous contents
      * @throws HandlerFailedException wrapping the handler's own failure; unwrapped by the error layer, never here
      * @throws LogicException when the declaration is malformed, promises another command, no strategy is wired, or the command was handled by more than one handler
      * @throws ExceptionInterface on a transport failure
@@ -94,9 +103,10 @@ abstract class CommandProcessor implements ProcessorInterface
 
         $stamps = $this->stamps();
 
-        $idempotentId = $this->idempotentMessageId($command, $context);
+        $idempotentId = $this->requestIdentity($command, $stamps, $context);
         if ($idempotentId !== null) {
             $stamps[] = new MessageIdStamp($idempotentId);
+            $stamps[] = new CorrelationStamp($idempotentId);
         }
 
         $envelope = $this->commandBus->dispatch($command, $stamps);
@@ -203,7 +213,9 @@ abstract class CommandProcessor implements ProcessorInterface
 
     /**
      * Extra stamps for the dispatch, an override seam for app processors. Rare in practice;
-     * prefer bus middleware for anything systematic.
+     * prefer bus middleware for anything systematic. A keyed HTTP request requires an
+     * `ActorStamp` from the server-resolved principal here, with an optional `TenantStamp`.
+     * Never derive either identity from an untrusted request header.
      *
      * @return array<int, StampInterface>
      */
@@ -213,20 +225,10 @@ abstract class CommandProcessor implements ProcessorInterface
     }
 
     /**
-     * The bus identity of a REPLAYED request: a client's `Idempotency-Key` header becomes the
-     * message id, bound to the command class so the same key on two endpoints never collides, and
-     * the metadata middleware respects a pre-stamped id, so a timeout retry re-dispatches the SAME
-     * bus identity instead of a fresh one.
-     *
-     * What that closes, honestly bounded: an ASYNC write's double-apply, since the consumer inbox
-     * dedups on this id and the replayed copy skip-acks. A sync write runs in-process through no
-     * inbox, so its replay protection stays where it already lives, the aggregate's CAS. Override
-     * returning null to opt out, or derive the identity from the command itself for a
-     * domain-keyed replay window.
-     *
+     * @param  array<int, StampInterface>  $stamps
      * @param  array<string, mixed>  $context
      */
-    protected function idempotentMessageId(object $command, array $context): ?string
+    private function requestIdentity(object $command, array $stamps, array $context): ?string
     {
         $request = $context['request'] ?? null;
         if (! $request instanceof Request) {
@@ -234,8 +236,27 @@ abstract class CommandProcessor implements ProcessorInterface
         }
 
         $key = trim((string) $request->headers->get('Idempotency-Key', ''));
+        if ($key === '') {
+            return null;
+        }
+        $registry = $this->idempotency
+            ?? throw new LogicException('Idempotency-Key requires an IdempotencyRegistry.');
+        $envelope = new Envelope($command, $stamps);
+        $actor = $envelope->last(ActorStamp::class)->actor
+            ?? throw ApiProblem::idempotencyPrincipalRequired();
+        $tenant = $envelope->last(TenantStamp::class)?->id;
 
-        return $key === '' ? null : 'idem-'.hash('sha256', $command::class."\0".$key);
+        $scope = hash('sha256', serialize(['http-idempotency-v1', $actor->type, $actor->id, $tenant]));
+        $fingerprint = hash('sha256', serialize([
+            'http-request-v1', $command::class, $request->getMethod(), $request->getRequestUri(),
+            $request->headers->get('Content-Type'), $request->headers->get('If-Match'), $request->getContent(),
+        ]));
+
+        try {
+            return $registry->claim($scope, hash('sha256', $key), $fingerprint);
+        } catch (IdempotencyConflict $error) {
+            throw ApiProblem::idempotencyConflict($error);
+        }
     }
 
     /**

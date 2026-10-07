@@ -51,6 +51,27 @@ final class ApiProblem extends RuntimeException implements ProblemExceptionInter
         );
     }
 
+    public static function idempotencyPrincipalRequired(): self
+    {
+        return new self(
+            type: '/errors/idempotency-principal-required',
+            title: 'Principal required',
+            status: 400,
+            detail: 'Idempotency-Key requires a server-resolved principal.',
+        );
+    }
+
+    public static function idempotencyConflict(?Throwable $previous = null): self
+    {
+        return new self(
+            type: '/errors/idempotency-conflict',
+            title: 'Idempotency key reused',
+            status: 422,
+            detail: 'This idempotency key was already used for a different request.',
+            previous: $previous,
+        );
+    }
+
     #[Override]
     public function getType(): string
     {

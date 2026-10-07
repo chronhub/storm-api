@@ -72,13 +72,10 @@ final readonly class ExceptionTranslator
     {
         $leaves = $wrapper->getWrappedExceptions(recursive: true);
 
-        foreach ($leaves as $leaf) {
-            if ($leaf instanceof ConcurrencyException || $leaf instanceof ValidationFailedException) {
-                return $leaf;
-            }
-        }
-
-        return array_first($leaves) ?? $wrapper;
+        return array_find(
+            $leaves,
+            static fn (Throwable $leaf): bool => $leaf instanceof ConcurrencyException || $leaf instanceof ValidationFailedException,
+        ) ?? array_first($leaves) ?? $wrapper;
     }
 
     private function translate(Throwable $throwable): Throwable

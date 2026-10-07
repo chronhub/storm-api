@@ -259,3 +259,35 @@ the architecture gates and the full internal documentation live.
 promise and no legacy layer. Pin an exact 0.x tag or commit for reproducibility; pinning fixes
 history, not a stable API. Schema changes are resets, not migrations, and a reset destroys data,
 so it stays on disposable environments.*
+
+## Scoped HTTP retries
+
+`CommandProcessor` accepts an optional fourth constructor dependency, `IdempotencyRegistry`.
+Subclasses with their own constructor must forward it. A nonempty `Idempotency-Key` requires
+that registry and an `ActorStamp` returned by `stamps()` from the server-resolved principal.
+An optional `TenantStamp` further separates callers. A missing registry is a wiring error;
+a missing principal is a 400 problem. Requests without a key keep their existing behavior.
+
+The key is trimmed and hashed within the actor type, actor id and tenant scope. Reusing it
+with a different command class, HTTP method, request URI including query, Content-Type,
+If-Match or raw body returns `/errors/idempotency-conflict` with status 422 before dispatch.
+The fingerprint compares bytes: JSON whitespace and property order changes require a new key.
+Command construction must derive its semantic inputs from those fields and the server identity;
+other request headers or mutable server state are not part of this fingerprint.
+
+Identical retries acquire the original message identity and correlation, so async 202 receipts
+stay stable. Acquisition commits before sending; an uncertain send never releases the claim.
+A retry redispatches the command and the consumer inbox deduplicates it. This is not a response
+cache or an exactly-once guarantee. Synchronous retries still execute the handler again.
+
+Install the registry schema with `storm:install` before enabling keyed requests. The default
+retry window is 24 hours, configured with `storm.idempotency.lifetime_seconds`. Keep inbox
+retention above that window plus queue lag and redelivery horizons. `storm:inbox:prune` refuses
+an age below the configured window. When reducing the window, retain the previous inbox age
+until old claims and deliveries expire. Manual SQL or direct store pruning bypasses this CLI guard.
+The registry expects the ordinary READ COMMITTED connection; stronger isolation may propagate
+serialization failures, which must be retried with the same key and request.
+
+Migration from deterministic key hashes requires draining old deliveries and using new client
+keys. The `idempotentMessageId()` override hook is removed: supply trusted identity stamps and
+forward the registry instead. Do not mix old and new processors for the same live retry window.
